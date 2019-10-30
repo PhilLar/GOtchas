@@ -1,7 +1,10 @@
 package main
 
 import (
+	"github.com/PhilLar/GOtchas/deps-injection_uber-fx/handlers"
 	"github.com/PhilLar/GOtchas/deps-injection_uber-fx/logger"
+	"github.com/PhilLar/GOtchas/deps-injection_uber-fx/server"
+	"go.uber.org/fx"
 )
 
 // unmodularized
@@ -21,9 +24,28 @@ import (
 
 // modularized
 
+//func main() {
+//	log := logger.NewLogger()
+//	handler := handlers.NewHandler(log)
+//
+//	http.Handle("/", handler)
+//
+//	http.ListenAndServe(":8080", nil)
+//
+//}
+
+// using fx framework
 func main() {
-	logger := logger.NewLogger()
+	app := fx.New(
+		server.Module,
+		logger.Module,
+		fx.Provide(
+			handlers.NewHandler,
+			),
+		)
+	app.Run()
 }
+
 
 
 
